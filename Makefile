@@ -8,6 +8,9 @@ export $(shell sed 's/=.*//' .env)
 ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(ARGS):;@:)
 
+run:
+	node src/app.js
+
 test:
 	NODE_ENV=test \
 	npx jest
