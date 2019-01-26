@@ -24,8 +24,10 @@
   "license": "ISC",
   "dependencies": {
     "@babel/code-frame": "^7.0.0",
+    "@babel/generator": "^7.3.0",
     "@babel/parser": "^7.3.1",
     "@babel/traverse": "^7.2.3",
+    "@babel/types": "^7.3.0",
     "flow-remove-types": "^1.2.3"
   },
   "devDependencies": {

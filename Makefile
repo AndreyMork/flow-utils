@@ -9,7 +9,7 @@ ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(ARGS):;@:)
 
 run:
-	node src/app.js
+	node src/index.js
 
 test:
 	NODE_ENV=test \

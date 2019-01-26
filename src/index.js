@@ -1,21 +1,16 @@
-// @flow
+require('flow-remove-types/register');
 
-const babelParser = require('@babel/parser');
-const traverse = require('@babel/traverse').default;
-
-module.exports.default = (code: string, cb: Function): void => {
-  const ast = babelParser.parse(
-    code,
-    {
-      sourceType: 'unambiguous',
-      plugins: ['flow'],
-    },
-  );
+const generate = require('@babel/generator').default;
+const fs = require('fs');
+const astWalker = require('./ast').default;
+// const typeWarnings = require('./typeWarnings.js').default;
+const primitiveTypes = require('./primitiveTypes').default;
 
 
-  traverse(ast, {
-    enter(path) {
-      cb(path, code);
-    },
-  });
-};
+const pathToSource = `${__dirname}/assets/source.js`;
+const pathToDist = `${__dirname}/assets/dist.js`;
+
+const scriptContent = fs.readFileSync(pathToSource, 'utf-8');
+const ast = astWalker(scriptContent, primitiveTypes);
+const { code } = generate(ast);
+fs.writeFileSync(pathToDist, code);
