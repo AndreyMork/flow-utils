@@ -14,7 +14,6 @@ module.exports.default = (code: string, visitor: VisitorType): void => {
     },
   );
 
-  traverse(ast, visitor(code));
-
+  traverse(ast, visitor);
   return ast;
 };
