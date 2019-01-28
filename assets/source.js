@@ -8,6 +8,7 @@ const nanF = (x) => NaN;
 const infF = (x, y) => Infinity;
 const boolF = () => false;
 const nullF = () => null;
+const arrF = () => [1, 2, 3, 'a', [1, true, null]];
 
 const t = (a) => 'ttt';
 const f = () => {
@@ -19,6 +20,8 @@ const g = function() {
     return 1;
   } else if (true) {
     return 'ggg';
+  } else if (true) {
+    return [1, 2, 3, 'a', [1, true, null]];
   }
 
   return 'ggg';

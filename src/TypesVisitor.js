@@ -7,18 +7,23 @@ const bTypes = require('@babel/types');
 // const { printCodeSeg } = require('./utils');
 
 
-const getFlowType = (nodeType: string, value: mixed) => {
+const getFlowType = (node) => {
+  const { type } = node;
+
   const types = {
-    StringLiteral: val => bTypes.StringLiteralTypeAnnotation(val),
+    StringLiteral: ({ value }) => bTypes.StringLiteralTypeAnnotation(value),
     TemplateLiteral: () => bTypes.StringTypeAnnotation(),
-    NumericLiteral: val => bTypes.NumberLiteralTypeAnnotation(val),
-    BooleanLiteral: val => bTypes.BooleanLiteralTypeAnnotation(val),
+    NumericLiteral: ({ value }) => bTypes.NumberLiteralTypeAnnotation(value),
+    BooleanLiteral: ({ value }) => bTypes.BooleanLiteralTypeAnnotation(value),
     NullLiteral: () => bTypes.nullLiteralTypeAnnotation(),
+    ArrayExpression: ({ elements }) => bTypes.TupleTypeAnnotation(
+      elements.map(getFlowType),
+    ),
   };
 
   const anyType = () => bTypes.anyTypeAnnotation();
-  const buildType = types[nodeType] || anyType;
-  return buildType(value);
+  const buildType = types[type] || anyType;
+  return buildType(node);
 };
 
 
@@ -29,6 +34,9 @@ const isSubtype = (a: Annotation, b: Annotation): boolean => {
     return true;
   }
   if (a.type === 'AnyTypeAnnotation') {
+    return false;
+  }
+  if (a.type === 'TupleTypeAnnotation') {
     return false;
   }
   if (a.type === b.type && a.value === b.value) {
@@ -95,8 +103,7 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
       return bTypes.voidTypeAnnotation();
     }
 
-    const { type, value } = node.argument;
-    const typeAnnotation = getFlowType(type, value);
+    const typeAnnotation = getFlowType(node.argument);
     return typeAnnotation;
   });
 
@@ -118,8 +125,8 @@ module.exports.default = {
   },
   ArrowFunctionExpression(path: PathType) {
     if (!path.get('body').isBlockStatement()) {
-      const { type, value } = path.node.body;
-      const returnTypeAnnotation = bTypes.typeAnnotation(getFlowType(type, value));
+      const { body } = path.node;
+      const returnTypeAnnotation = bTypes.typeAnnotation(getFlowType(body));
       path.get('returnType').replaceWith(returnTypeAnnotation);
       return;
     }
