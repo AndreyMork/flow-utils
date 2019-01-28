@@ -1,6 +1,6 @@
 // @flow
 
-import type { VisitorType } from './types';
+import type { VisitorType } from './types.flow';
 
 const babelParser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;

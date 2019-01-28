@@ -1,6 +1,6 @@
 // @flow
 
-import type { PathType } from './types';
+import type { PathType } from './types.flow';
 
 const { codeFrameColumns } = require('@babel/code-frame');
 
