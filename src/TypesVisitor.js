@@ -21,13 +21,64 @@ const getFlowType = (nodeType: string, value: mixed) => {
   return buildType(value);
 };
 
+
+type Annotation = {| type: string, value?: mixed |};
+// a is subtype of b => true, else false
+const isSubtype = (a: Annotation, b: Annotation): boolean => {
+  if (b.type === 'AnyTypeAnnotation') {
+    return true;
+  }
+  if (a.type === 'AnyTypeAnnotation') {
+    return false;
+  }
+  if (a.type === b.type && a.value === b.value) {
+    return true;
+  }
+
+  const primitiveLevelSuperiors = {
+    StringTypeAnnotation: ['AnyTypeAnnotation'],
+    NumberTypeAnnotation: ['AnyTypeAnnotation'],
+    BooleanTypeAnnotation: ['AnyTypeAnnotation'],
+    VoidTypeAnnotation: ['AnyTypeAnnotation'],
+  };
+
+  const literalLevelSuperiors = {
+    StringLiteralTypeAnnotation: [
+      'StringTypeAnnotation', ...primitiveLevelSuperiors.StringTypeAnnotation,
+    ],
+    NumberLiteralTypeAnnotation: [
+      'NumberTypeAnnotation', ...primitiveLevelSuperiors.NumberTypeAnnotation,
+    ],
+    BooleanLiteralTypeAnnotation: [
+      'BooleanTypeAnnotation', ...primitiveLevelSuperiors.BooleanTypeAnnotation,
+    ],
+    NullLiteralTypeAnnotation: [
+      'VoidTypeAnnotation', ...primitiveLevelSuperiors.VoidTypeAnnotation,
+    ],
+  };
+
+  const allSuperiors = { ...primitiveLevelSuperiors, ...literalLevelSuperiors };
+  const superiors = allSuperiors[a.type];
+
+  return superiors.includes(b.type);
+};
+
+const resolveTypes = (types) => {
+  const sortedTypes = [...types].sort((a, b) => (isSubtype(a, b) ? -1 : 1));
+  const res = sortedTypes.filter((item, ind) => {
+    const leftTypes = sortedTypes.slice(ind + 1);
+    return !leftTypes
+      .some(possibleSuperior => isSubtype(item, possibleSuperior));
+  });
+
+  return res;
+};
+
 const getReturnStatements = (path: PathType): Array<PathType> => {
   const returnStatements = [];
   path.traverse({
     ReturnStatement(innerPath) {
-      if (innerPath.node.argument) {
-        returnStatements.push(innerPath);
-      }
+      returnStatements.push(innerPath);
     },
   });
 
@@ -40,6 +91,10 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
   }
 
   const typeAnnotations = returnStatements.map(({ node }) => {
+    if (!node.argument) {
+      return bTypes.voidTypeAnnotation();
+    }
+
     const { type, value } = node.argument;
     const typeAnnotation = getFlowType(type, value);
     return typeAnnotation;
@@ -49,7 +104,8 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
     return bTypes.typeAnnotation(typeAnnotations[0]);
   }
 
-  const unionTypes = bTypes.UnionTypeAnnotation(typeAnnotations);
+  const resolvedTypes = resolveTypes(typeAnnotations);
+  const unionTypes = bTypes.UnionTypeAnnotation(resolvedTypes);
   return bTypes.typeAnnotation(unionTypes);
 };
 

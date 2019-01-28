@@ -1,15 +1,6 @@
 // @flow
 /* eslint-disable */
 
-import onlyDefault from './a';
-import { named1, named2 } from './b';
-import defaultM, { andNamed1, andNamed2 } from '../../c';
-import { named2 as alias } from 'alias';
-import 'aaa';
-import * as ns from 'module';
-import defaultM2, * as ns2 from 'module';
-
-
 const strtF = () => 'abcd';
 const tempF = () => `abc${1}de`;
 const numF = () => 123;
@@ -23,7 +14,7 @@ const f = () => {
   return 'fff';
 };
 
-export const g = function() {
+const g = function() {
   if (Math.random() > 0.5) {
     return 1;
   } else if (true) {
@@ -33,13 +24,28 @@ export const g = function() {
   return 'ggg';
 };
 
-export function y() {
+function y() {
   return 'yyy';
 }
 
+const anyF = (x) => {
+  if (true) {
+    return x;
+  } else if (false) {
+    return;
+  } else if (true) {
+    return;
+  } else if (true) {
+    return null;
+  }
+
+  return 'aaa';
+}
 
 function returnLess() {};
 
 function emptyReturn() {
   return;
 }
+
+const objF = (a) => ({ a });
