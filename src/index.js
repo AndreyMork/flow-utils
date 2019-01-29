@@ -1,20 +1,12 @@
 require('flow-remove-types/register');
 
-const { default: generate } = require('@babel/generator');
-const fs = require('fs');
-const { default: astWalker } = require('./ast');
-// const { default: typeWarnings } = require('./typeWarnings.js');
+const generate = require('@babel/generator').default;
+const astWalker = require('./ast').default;
 const TypesVisitor = require('./TypesVisitor').default;
 
-// const pathToSource = `${__dirname}/test.js`;
-const pathToSource = `${__dirname}/../assets/source.js`;
-const pathToDist = `${__dirname}/../assets/dist.js`;
+export default (sourceCode) => {
+  const ast = astWalker(sourceCode, TypesVisitor);
+  const distCode = generate(ast, { retainLines: true }).code;
 
-const scriptContent = fs.readFileSync(pathToSource, 'utf-8');
-const ast = astWalker(scriptContent, TypesVisitor);
-const { code } = generate(ast, {
-  retainLines: true,
-  // retainFunctionParens: true,
-});
-
-fs.writeFileSync(pathToDist, code);
+  return distCode;
+};

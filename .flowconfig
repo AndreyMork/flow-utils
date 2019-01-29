@@ -1,5 +1,5 @@
 [ignore]
-<PROJECT_ROOT>/assets/.*
+<PROJECT_ROOT>/__tests__/__fixtures__/.*
 
 [include]
 
