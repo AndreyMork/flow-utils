@@ -9,7 +9,8 @@ ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(ARGS):;@:)
 
 run:
-	node src/index.js
+	node src/bin/index.js temp/source.js temp/dist.js
+	npx prettier-eslint --write temp/*
 
 test:
 	NODE_ENV=test \

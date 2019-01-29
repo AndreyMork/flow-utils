@@ -4,7 +4,7 @@ const generate = require('@babel/generator').default;
 const astWalker = require('./ast').default;
 const TypesVisitor = require('./TypesVisitor').default;
 
-export default (sourceCode) => {
+module.exports.default = (sourceCode) => {
   const ast = astWalker(sourceCode, TypesVisitor);
   const distCode = generate(ast, { retainLines: true }).code;
 
