@@ -6,7 +6,6 @@ const bTypes = require('@babel/types');
 // const traverse = require('@babel/traverse').default;
 // const { printCodeSeg } = require('./utils');
 
-
 const getFlowType = (node) => {
   const { type } = node;
 
@@ -16,16 +15,13 @@ const getFlowType = (node) => {
     NumericLiteral: ({ value }) => bTypes.NumberLiteralTypeAnnotation(value),
     BooleanLiteral: ({ value }) => bTypes.BooleanLiteralTypeAnnotation(value),
     NullLiteral: () => bTypes.nullLiteralTypeAnnotation(),
-    ArrayExpression: ({ elements }) => bTypes.TupleTypeAnnotation(
-      elements.map(getFlowType),
-    ),
+    ArrayExpression: ({ elements }) => bTypes.TupleTypeAnnotation(elements.map(getFlowType)),
   };
 
   const anyType = () => bTypes.anyTypeAnnotation();
   const buildType = types[type] || anyType;
   return buildType(node);
 };
-
 
 type Annotation = {| type: string, value?: mixed |};
 // a is subtype of b => true, else false
@@ -52,16 +48,20 @@ const isSubtype = (a: Annotation, b: Annotation): boolean => {
 
   const literalLevelSuperiors = {
     StringLiteralTypeAnnotation: [
-      'StringTypeAnnotation', ...primitiveLevelSuperiors.StringTypeAnnotation,
+      'StringTypeAnnotation',
+      ...primitiveLevelSuperiors.StringTypeAnnotation,
     ],
     NumberLiteralTypeAnnotation: [
-      'NumberTypeAnnotation', ...primitiveLevelSuperiors.NumberTypeAnnotation,
+      'NumberTypeAnnotation',
+      ...primitiveLevelSuperiors.NumberTypeAnnotation,
     ],
     BooleanLiteralTypeAnnotation: [
-      'BooleanTypeAnnotation', ...primitiveLevelSuperiors.BooleanTypeAnnotation,
+      'BooleanTypeAnnotation',
+      ...primitiveLevelSuperiors.BooleanTypeAnnotation,
     ],
     NullLiteralTypeAnnotation: [
-      'VoidTypeAnnotation', ...primitiveLevelSuperiors.VoidTypeAnnotation,
+      'VoidTypeAnnotation',
+      ...primitiveLevelSuperiors.VoidTypeAnnotation,
     ],
   };
 
@@ -75,8 +75,7 @@ const resolveTypes = (types) => {
   const sortedTypes = [...types].sort((a, b) => (isSubtype(a, b) ? -1 : 1));
   const res = sortedTypes.filter((item, ind) => {
     const leftTypes = sortedTypes.slice(ind + 1);
-    return !leftTypes
-      .some(possibleSuperior => isSubtype(item, possibleSuperior));
+    return !leftTypes.some(possibleSuperior => isSubtype(item, possibleSuperior));
   });
 
   return res;
@@ -115,7 +114,6 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
   const unionTypes = bTypes.UnionTypeAnnotation(resolvedTypes);
   return bTypes.typeAnnotation(unionTypes);
 };
-
 
 module.exports.default = {
   'FunctionDeclaration|FunctionExpression': (path: PathType) => {
