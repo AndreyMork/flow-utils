@@ -4,7 +4,6 @@ import type { PathType } from './types.flow';
 
 const { codeFrameColumns } = require('@babel/code-frame');
 
-
 type argPrintCodeSegOptions = {|
   linesAbove?: number,
   linesBelow?: number,
@@ -20,7 +19,6 @@ const printCodeSeg: sigPrintCodeSeg = (code, path, options) => {
 
   console.log(codeFrameColumns(code, path.node.loc, options || defaultOptions));
 };
-
 
 module.exports = {
   printCodeSeg,

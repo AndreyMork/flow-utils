@@ -6,7 +6,6 @@ const { default: astWalker } = require('./ast');
 // const { default: typeWarnings } = require('./typeWarnings.js');
 const TypesVisitor = require('./TypesVisitor').default;
 
-
 // const pathToSource = `${__dirname}/test.js`;
 const pathToSource = `${__dirname}/../assets/source.js`;
 const pathToDist = `${__dirname}/../assets/dist.js`;

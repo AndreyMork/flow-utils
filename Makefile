@@ -31,3 +31,7 @@ flow:
 
 full-test: lint flow test
 .PHONY: full-test
+
+prettier:
+	npx prettier-eslint --write src/*
+.PHONY: prettier
