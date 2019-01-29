@@ -23,16 +23,19 @@ const getFlowType = (node) => {
   return buildType(node);
 };
 
-type Annotation = {| type: string, value?: mixed |};
+// type Annotation = {| type: string, value?: mixed, types?: mixed |};
 // a is subtype of b => true, else false
-const isSubtype = (a: Annotation, b: Annotation): boolean => {
+const isSubtype = (a, b): boolean => {
   if (b.type === 'AnyTypeAnnotation') {
     return true;
   }
   if (a.type === 'AnyTypeAnnotation') {
     return false;
   }
-  if (a.type === 'TupleTypeAnnotation') {
+  if (a.type === 'TupleTypeAnnotation' && b.type === 'TupleTypeAnnotation') {
+    return a.types.every((item, ind) => isSubtype(item, b.types[ind]));
+  }
+  if (a.type === 'TupleTypeAnnotation' || b.type === 'TupleTypeAnnotation') {
     return false;
   }
   if (a.type === b.type && a.value === b.value) {
@@ -67,6 +70,10 @@ const isSubtype = (a: Annotation, b: Annotation): boolean => {
 
   const allSuperiors = { ...primitiveLevelSuperiors, ...literalLevelSuperiors };
   const superiors = allSuperiors[a.type];
+  if (!superiors) {
+    console.warn(`unknown type ${a.type}`);
+    return false;
+  }
 
   return superiors.includes(b.type);
 };
