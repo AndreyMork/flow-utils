@@ -1,5 +1,6 @@
 [ignore]
-<PROJECT_ROOT>/__tests__/__fixtures__/.*
+<PROJECT_ROOT>/__fixtures__/.*
+<PROJECT_ROOT>/temp/.*
 
 [include]
 

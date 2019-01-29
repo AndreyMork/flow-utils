@@ -20,6 +20,16 @@ const printCodeSeg: sigPrintCodeSeg = (code, path, options) => {
   console.log(codeFrameColumns(code, path.node.loc, options || defaultOptions));
 };
 
+const flat = (arr: Array<any>) => {
+  const res = arr.reduce((acc, item) => {
+    const flattenItem = Array.isArray(item) ? flat(item) : [item];
+    return [...acc, ...flattenItem];
+  }, []);
+
+  return res;
+};
+
 module.exports = {
   printCodeSeg,
+  flat,
 };

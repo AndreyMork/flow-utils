@@ -3,90 +3,9 @@
 import type { PathType } from './types.flow';
 
 const bTypes = require('@babel/types');
+const { getFlowType, resolveTypes } = require('./typeUtils');
+const { flat } = require('./utils');
 // const traverse = require('@babel/traverse').default;
-// const { printCodeSeg } = require('./utils');
-
-const getFlowType = (node) => {
-  const { type } = node;
-
-  const types = {
-    StringLiteral: ({ value }) => bTypes.StringLiteralTypeAnnotation(value),
-    TemplateLiteral: () => bTypes.StringTypeAnnotation(),
-    NumericLiteral: ({ value }) => bTypes.NumberLiteralTypeAnnotation(value),
-    BooleanLiteral: ({ value }) => bTypes.BooleanLiteralTypeAnnotation(value),
-    NullLiteral: () => bTypes.nullLiteralTypeAnnotation(),
-    ArrayExpression: ({ elements }) => bTypes.TupleTypeAnnotation(elements.map(getFlowType)),
-  };
-
-  const anyType = () => bTypes.anyTypeAnnotation();
-  const buildType = types[type] || anyType;
-  return buildType(node);
-};
-
-// type Annotation = {| type: string, value?: mixed, types?: mixed |};
-// a is subtype of b => true, else false
-const isSubtype = (a, b): boolean => {
-  if (b.type === 'AnyTypeAnnotation') {
-    return true;
-  }
-  if (a.type === 'AnyTypeAnnotation') {
-    return false;
-  }
-  if (a.type === 'TupleTypeAnnotation' && b.type === 'TupleTypeAnnotation') {
-    return a.types.every((item, ind) => isSubtype(item, b.types[ind]));
-  }
-  if (a.type === 'TupleTypeAnnotation' || b.type === 'TupleTypeAnnotation') {
-    return false;
-  }
-  if (a.type === b.type && a.value === b.value) {
-    return true;
-  }
-
-  const primitiveLevelSuperiors = {
-    StringTypeAnnotation: ['AnyTypeAnnotation'],
-    NumberTypeAnnotation: ['AnyTypeAnnotation'],
-    BooleanTypeAnnotation: ['AnyTypeAnnotation'],
-    VoidTypeAnnotation: ['AnyTypeAnnotation'],
-  };
-
-  const literalLevelSuperiors = {
-    StringLiteralTypeAnnotation: [
-      'StringTypeAnnotation',
-      ...primitiveLevelSuperiors.StringTypeAnnotation,
-    ],
-    NumberLiteralTypeAnnotation: [
-      'NumberTypeAnnotation',
-      ...primitiveLevelSuperiors.NumberTypeAnnotation,
-    ],
-    BooleanLiteralTypeAnnotation: [
-      'BooleanTypeAnnotation',
-      ...primitiveLevelSuperiors.BooleanTypeAnnotation,
-    ],
-    NullLiteralTypeAnnotation: [
-      'VoidTypeAnnotation',
-      ...primitiveLevelSuperiors.VoidTypeAnnotation,
-    ],
-  };
-
-  const allSuperiors = { ...primitiveLevelSuperiors, ...literalLevelSuperiors };
-  const superiors = allSuperiors[a.type];
-  if (!superiors) {
-    console.warn(`unknown type ${a.type}`);
-    return false;
-  }
-
-  return superiors.includes(b.type);
-};
-
-const resolveTypes = (types) => {
-  const sortedTypes = [...types].sort((a, b) => (isSubtype(a, b) ? -1 : 1));
-  const res = sortedTypes.filter((item, ind) => {
-    const leftTypes = sortedTypes.slice(ind + 1);
-    return !leftTypes.some(possibleSuperior => isSubtype(item, possibleSuperior));
-  });
-
-  return res;
-};
 
 const getReturnStatements = (path: PathType): Array<PathType> => {
   const returnStatements = [];
@@ -101,17 +20,20 @@ const getReturnStatements = (path: PathType): Array<PathType> => {
 
 const getTypeAnnotation = (returnStatements: Array<PathType>) => {
   if (returnStatements.length === 0) {
-    return bTypes.typeAnnotation(bTypes.voidTypeAnnotation());
+    return bTypes.typeAnnotation(bTypes.VoidTypeAnnotation());
   }
 
-  const typeAnnotations = returnStatements.map(({ node }) => {
-    if (!node.argument) {
-      return bTypes.voidTypeAnnotation();
-    }
+  const typeAnnotations = flat(
+    returnStatements.map(({ node }) => {
+      if (!node.argument) {
+        return bTypes.VoidTypeAnnotation();
+      }
 
-    const typeAnnotation = getFlowType(node.argument);
-    return typeAnnotation;
-  });
+      const typeAnnotation = getFlowType(node.argument);
+
+      return typeAnnotation;
+    }),
+  );
 
   if (typeAnnotations.length === 1) {
     return bTypes.typeAnnotation(typeAnnotations[0]);
