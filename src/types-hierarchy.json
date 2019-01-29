@@ -1,0 +1,18 @@
+{
+  "Any": {
+    "Number": {
+      "NumberLiteral": null
+    },
+    "String": {
+      "StringLiteral": null
+    },
+    "Boolean": {
+      "BooleanLiteral": "hey"
+    },
+    "Void": null,
+    "NullLiteral": null,
+    "Array": {
+      "Tuple": null
+    }
+  }
+}
