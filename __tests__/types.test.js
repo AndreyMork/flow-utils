@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import format from 'prettier-eslint';
-import app from '../src';
+
+const app = require('../src').default;
 
 const pathToFixtures = path.join(__dirname, '../__fixtures__/');
 
