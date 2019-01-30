@@ -26,7 +26,7 @@ class Tree {
     // }, undefined);
 
     const nodeIsFound = (node: Tree): boolean => Tree.dfs(node, value) !== undefined;
-    const res = root.children.find(nodeIsFound);
+    const res = root.getChildren().find(nodeIsFound);
 
     return res;
   }
@@ -39,10 +39,27 @@ class Tree {
     return Tree.dfs(this, value);
   }
 
-  // traverse(cb: Tree => any) {
-  //   cb(this);
-  //   this.children.forEach(cb);
-  // }
+  includes(value: string): boolean {
+    return this.findNode(value) !== undefined;
+  }
+
+  getNodeLevel(value: string): ?number {
+    const traverse = (currNode: Tree, currLevel: number): ?number => {
+      if (currNode.data === value) {
+        return currLevel;
+      }
+
+      return currNode.getChildren().reduce((acc: ?number, child: Tree): ?number => {
+        if (acc !== undefined) {
+          return acc;
+        }
+
+        return traverse(child, currLevel + 1);
+      }, undefined);
+    };
+
+    return traverse(this, 1);
+  }
 }
 
 export default Tree;
