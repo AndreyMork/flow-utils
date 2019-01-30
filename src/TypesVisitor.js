@@ -1,10 +1,10 @@
 // @flow
 
+import * as bTypes from '@babel/types';
 import type { PathType } from './types.flow';
+import { getFlowType, resolveTypes } from './typeUtils';
+import { flat } from './utils';
 
-const bTypes = require('@babel/types');
-const { getFlowType, resolveTypes } = require('./typeUtils');
-const { flat } = require('./utils');
 // const traverse = require('@babel/traverse').default;
 
 const getReturnStatements = (path: PathType): Array<PathType> => {
@@ -44,7 +44,7 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
   return bTypes.typeAnnotation(unionTypes);
 };
 
-module.exports.default = {
+export default {
   'FunctionDeclaration|FunctionExpression': (path: PathType) => {
     const returnStatements = getReturnStatements(path);
     const typeAnnotation = getTypeAnnotation(returnStatements);

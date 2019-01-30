@@ -1,8 +1,7 @@
 // @flow
 
 // import type { PathType } from './types.flow';
-
-const bTypes = require('@babel/types');
+import * as bTypes from '@babel/types';
 
 const getUnaryOperatorType = (operator) => {
   const operatorTypes = {
@@ -18,7 +17,7 @@ const getUnaryOperatorType = (operator) => {
   return operatorTypes[operator];
 };
 
-const getFlowType = (node: *) => {
+export const getFlowType = (node: *) => {
   const { type } = node;
 
   const types = {
@@ -113,7 +112,7 @@ const typeDegree = (node: *) => {
   return degrees[type];
 };
 
-const resolveTypes = (types: []) => {
+export const resolveTypes = (types: []) => {
   const sortedTypes = [...types].sort((a, b) => typeDegree(b) - typeDegree(a));
   const res = sortedTypes.filter((item, ind) => {
     const leftTypes = sortedTypes.slice(ind + 1);
@@ -121,9 +120,4 @@ const resolveTypes = (types: []) => {
   });
 
   return res;
-};
-
-module.exports = {
-  getFlowType,
-  resolveTypes,
 };
