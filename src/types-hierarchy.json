@@ -1,18 +1,49 @@
 {
-  "Any": {
-    "Number": {
-      "NumberLiteral": null
+  "data": "Any",
+  "children": [
+    {
+      "data": "Number",
+      "children": [
+        {
+          "data": "NumberLiteral",
+          "children": []
+        }
+      ]
     },
-    "String": {
-      "StringLiteral": null
+    {
+      "data": "String",
+      "children": [
+        {
+          "data": "StringLiteral",
+          "children": []
+        }
+      ]
     },
-    "Boolean": {
-      "BooleanLiteral": "hey"
+    {
+      "data": "Boolean",
+      "children": [
+        {
+          "data": "BooleanLiteral",
+          "children": []
+        }
+      ]
     },
-    "Void": null,
-    "NullLiteral": null,
-    "Array": {
-      "Tuple": null
+    {
+      "data": "Void",
+      "children": []
+    },
+    {
+      "data": "NullLiteral",
+      "children": []
+    },
+    {
+      "data": "Array",
+      "children": [
+        {
+          "data": "Tuple",
+          "children": []
+        }
+      ]
     }
-  }
+  ]
 }

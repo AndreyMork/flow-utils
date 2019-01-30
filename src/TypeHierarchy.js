@@ -1,58 +1,47 @@
 // @flow
 
-import typesHierarchy from './types-hierarchy.json';
-// const typesHierarchy: TreeObjectType = require('./types-hierarchy.json');
+import Tree from './Tree';
+import typesHierarchyJSON from './types-hierarchy.json';
 
-type TreeArgType = { [value: string]: TreeArgType | null };
+type AnnotationNodeType = Object;
 
-class Tree {
-  data: string;
+const stripTailPart = (annotation: string): string => {
+  const tailPart = 'TypeAnnotation';
 
-  children: Array<Tree>;
+  const [res] = annotation.split(tailPart);
+  return res;
+};
 
-  constructor(objTree: TreeArgType): void {
-    if (Object.keys(objTree).length !== 1) {
-      throw new Error('Tree must have exactly one root');
-    }
+class Type {
+  typesHierarchy: Tree;
 
-    const [key] = Object.keys(objTree);
-    // const values = Object.values(objTree[key]);
-    this.data = key;
-    const subObject = objTree[key];
-    if (subObject === null) {
-      this.children = [];
-    } else {
-      const values = Object.keys(subObject).map((subKey: string) => ({
-        subKey: subObject[subKey],
-      }));
-      this.children = values.map(child => new Tree(child));
-    }
+  type: string;
 
-    // if (values === null) {
-    //   this.children = [];
-    // } else {
-    //   this.children = values.map(child => new Tree(child));
-    // }
-    // this.children = values === null ? [] : values.map(child => new Tree(child));
+  node: AnnotationNodeType;
+
+  static typesHierarchy = new Tree(typesHierarchyJSON);
+
+  constructor(annotationNode: AnnotationNodeType) {
+    this.type = stripTailPart(annotationNode.type);
+    this.node = annotationNode;
   }
 
-  // static DFS(root: Tree, value: string) {
-  //   const children = root.getChildren;
-  // }
-  //
-  // getChildren(): Array<Tree> {
-  //   return this.children;
-  // }
-  // // findNode(value: string) {
-  // //
-  // // }
+  static compare(a: Type, b: Type): number {
+    // a < b => less than 0
+    // a == b => equals 0
+    // a > b => greater than 0
+    const aLevel = Type.typesHierarchy.getNodeLevel(a.type);
+    if (!aLevel) {
+      throw new Error(`Unknown type ${a.type}`);
+    }
+
+    const bLevel = Type.typesHierarchy.getNodeLevel(b.type);
+    if (!bLevel) {
+      throw new Error(`Unknown type ${b.type}`);
+    }
+
+    return aLevel - bLevel;
+  }
 }
 
-//
-// class HT {
-//   tree: Object;
-//
-//   static tree = typesHierarchy;
-//
-//   static isSubtype(a: string, b: string): boolean {}
-// }
+export default Type;
