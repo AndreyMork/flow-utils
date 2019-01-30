@@ -1,10 +1,8 @@
-require('flow-remove-types/register');
+import generate from '@babel/generator';
+import astWalker from './ast';
+import TypesVisitor from './TypesVisitor';
 
-const generate = require('@babel/generator').default;
-const astWalker = require('./ast').default;
-const TypesVisitor = require('./TypesVisitor').default;
-
-module.exports.default = (sourceCode) => {
+export default (sourceCode) => {
   const ast = astWalker(sourceCode, TypesVisitor);
   const distCode = generate(ast, { retainLines: true }).code;
 

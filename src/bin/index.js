@@ -1,9 +1,14 @@
 #! /usr/bin/node
 
-const program = require('commander');
-const fs = require('fs');
-const app = require('..').default;
-const { version } = require('../../package.json');
+// const program = require('commander');
+// const fs = require('fs');
+// const app = require('..').default;
+// const { version } = require('../../package.json');
+
+import program from 'commander';
+import fs from 'fs';
+import app from '..';
+import { version } from '../../package.json';
 
 program
   .description('adds type annotations')

@@ -1,6 +1,6 @@
-const { codeFrameColumns } = require('@babel/code-frame');
+import { codeFrameColumns } from '@babel/code-frame';
 
-module.exports.default = (path, code) => {
+export default (path, code) => {
   const bannedAnnotations = ['AnyTypeAnnotation', 'GenericTypeAnnotation'];
 
   if (path.parent.type === 'TypeAnnotation') {
