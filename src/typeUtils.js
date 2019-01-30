@@ -112,7 +112,7 @@ const typeDegree = (node: *) => {
   return degrees[type];
 };
 
-export const resolveTypes = (types: []) => {
+export const resolveTypes = (types: Array<any>) => {
   const sortedTypes = [...types].sort((a, b) => typeDegree(b) - typeDegree(a));
   const res = sortedTypes.filter((item, ind) => {
     const leftTypes = sortedTypes.slice(ind + 1);
