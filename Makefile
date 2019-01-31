@@ -11,11 +11,13 @@ $(eval $(ARGS):;@:)
 run: build
 	node -r source-map-support/register dist/bin/index.js temp/source.js temp/dist.js && \
 	npx prettier-eslint --write temp/*
+.PHONY: run
 
 build:
 	rm -rf dist/
 	# npx flow-remove-types --all --pretty src --out-dir dist
 	npx babel src --out-dir dist --source-maps inline
+.PHONY: build
 
 test:
 	NODE_ENV=test \
