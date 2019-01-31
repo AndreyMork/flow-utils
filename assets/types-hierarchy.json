@@ -5,7 +5,7 @@
       "data": "Number",
       "children": [
         {
-          "data": "NumberLiteral",
+          "data": "NumericLiteral",
           "children": []
         }
       ]

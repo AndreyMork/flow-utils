@@ -3,42 +3,33 @@
 // import type { PathType } from './types.flow';
 import * as bTypes from '@babel/types';
 import Type from './entities/Type';
+import type { PathType } from './types.flow';
+import expressionJSON from '../assets/temp.json';
 
-const getUnaryOperatorType = (operator) => {
-  const operatorTypes = {
-    '+': bTypes.NumberTypeAnnotation(),
-    '-': bTypes.NumberTypeAnnotation(),
-    '!': bTypes.BooleanTypeAnnotation(),
-    '~': bTypes.BooleanTypeAnnotation(),
-    typeof: bTypes.StringTypeAnnotation(),
-    void: bTypes.VoidTypeAnnotation(),
-    '++': bTypes.NumberTypeAnnotation(),
-    '--': bTypes.NumberTypeAnnotation(),
-  };
-  return operatorTypes[operator];
-};
+// ArrayExpression: ({ elements }) => bTypes.TupleTypeAnnotation(elements.map(getFlowType)),
 
-export const getFlowType = (node: *) => {
+const expressions = ['UnaryExpression', 'UpdateExpression'];
+const complexExpressions = ['ArrayExpression'];
+const typeHasValue = (type: string): boolean => type.includes('Literal') && type !== 'NullLiteral';
+
+export default (node): Type => {
+  if (node === null) {
+    return new Type('Void');
+  }
+
   const { type } = node;
+  if (expressions.includes(type)) {
+    const { operator } = node;
+    return new Type(expressionJSON[operator]);
+  }
+  if (complexExpressions.includes(type)) {
+    console.log(type);
+    return new Type('Void');
+  }
+  if (typeHasValue(type)) {
+    const { value } = node;
+    return new Type(type, value);
+  }
 
-  const types = {
-    StringLiteral: ({ value }) => bTypes.StringLiteralTypeAnnotation(value),
-    TemplateLiteral: () => bTypes.StringTypeAnnotation(),
-    NumericLiteral: ({ value }) => bTypes.NumberLiteralTypeAnnotation(value),
-    BooleanLiteral: ({ value }) => bTypes.BooleanLiteralTypeAnnotation(value),
-    NullLiteral: () => bTypes.NullLiteralTypeAnnotation(),
-    ArrayExpression: ({ elements }) => bTypes.TupleTypeAnnotation(elements.map(getFlowType)),
-    UnaryExpression: ({ operator }) => getUnaryOperatorType(operator),
-    UpdateExpression: ({ operator }) => getUnaryOperatorType(operator),
-  };
-
-  const anyType = () => bTypes.AnyTypeAnnotation();
-  const buildType = types[type] || anyType;
-  return buildType(node);
-};
-
-export const resolveTypes = (types: Array<any>) => {
-  const mappedTypes = types.map(item => new Type(item));
-
-  return Type.resolveTypes(mappedTypes).map(item => item.node);
+  return new Type(type);
 };

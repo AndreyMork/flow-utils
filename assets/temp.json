@@ -1,0 +1,10 @@
+{
+  "+": "Number",
+  "-": "Number",
+  "!": "Boolean",
+  "~": "Boolean",
+  "typeof": "String",
+  "void": "String",
+  "++": "Number",
+  "--": "Number"
+}

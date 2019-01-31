@@ -1,21 +1,18 @@
 // @flow
 
+import * as bTypes from '@babel/types';
 import Tree from './Tree';
 import typesHierarchyJSON from '../../assets/types-hierarchy.json';
-
-type AnnotationNodeType = Object;
-
-const stripTailPart = (annotation: string): string => {
-  const tailPart = 'TypeAnnotation';
-
-  const [res] = annotation.split(tailPart);
-  return res;
-};
 
 class Type {
   typesHierarchy: Tree;
   type: string;
-  node: AnnotationNodeType;
+  value: ?any;
+
+  constructor(type: string, value: ?any) {
+    this.type = type;
+    this.value = value;
+  }
 
   static typesHierarchy = new Tree(typesHierarchyJSON);
 
@@ -47,9 +44,29 @@ class Type {
     return bLevel - aLevel;
   }
 
-  constructor(annotationNode: AnnotationNodeType) {
-    this.type = stripTailPart(annotationNode.type);
-    this.node = annotationNode;
+  buildAnnotation() {
+    const builderFunctions = {
+      StringLiteral: bTypes.StringLiteralTypeAnnotation,
+      TemplateLiteral: bTypes.StringTypeAnnotation,
+      NumericLiteral: bTypes.NumberLiteralTypeAnnotation,
+      BooleanLiteral: bTypes.BooleanLiteralTypeAnnotation,
+      NullLiteral: bTypes.NullLiteralTypeAnnotation,
+      Void: bTypes.VoidTypeAnnotation,
+      String: bTypes.StringTypeAnnotation,
+      Number: bTypes.NumberTypeAnnotation,
+      Boolean: bTypes.BooleanTypeAnnotation,
+      Any: bTypes.AnyTypeAnnotation,
+    };
+
+    const builderFunction = builderFunctions[this.type];
+    if (!builderFunction) {
+      return builderFunctions.Any();
+    }
+    if (this.value) {
+      return builderFunction(this.value);
+    }
+
+    return builderFunction();
   }
 
   isSubtype(b: Type): boolean {
@@ -63,7 +80,7 @@ class Type {
 
       return thisSubtypes.every((item, ind) => item.isSubtype(bSubtypes[ind]));
     }
-    if (this.type === b.type && this.node.value === b.node.value) {
+    if (this.type === b.type && this.value === b.value) {
       return true;
     }
 
