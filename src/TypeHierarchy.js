@@ -1,7 +1,7 @@
 // @flow
 
 import Tree from './Tree';
-import typesHierarchyJSON from './types-hierarchy.json';
+import typesHierarchyJSON from '../assets/types-hierarchy.json';
 
 type AnnotationNodeType = Object;
 
@@ -40,8 +40,10 @@ class Type {
       throw new Error(`Unknown type ${b.type}`);
     }
 
-    return aLevel - bLevel;
+    return bLevel - aLevel;
   }
+
+  isSubtype(t: Type) {}
 }
 
 export default Type;
