@@ -1,5 +1,5 @@
 import generate from '@babel/generator';
-import astWalker from './ast';
+import astWalker from './astWalker';
 import TypesVisitor from './TypesVisitor';
 
 export default (sourceCode) => {
