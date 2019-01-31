@@ -15,7 +15,7 @@ const f = (): 'fff' => {
   return 'fff';
 };
 
-const g = function(): 1 | 'ggg' | [1, 2, 3, 'a', [1, true, null]] {
+const g = function(): 1 | [1, 2, 3, 'a', [1, true, null]] | 'ggg' {
   if (Math.random() > 0.5) {
     return 1;
   } else if (true) {
