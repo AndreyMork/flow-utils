@@ -2,6 +2,7 @@
 
 // import type { PathType } from './types.flow';
 import * as bTypes from '@babel/types';
+import Type from './Type';
 
 const getUnaryOperatorType = (operator) => {
   const operatorTypes = {
@@ -36,88 +37,8 @@ export const getFlowType = (node: *) => {
   return buildType(node);
 };
 
-// type Annotation = {| type: string, value?: mixed, types?: mixed |};
-// a is subtype of b => true, else false
-const isSubtype = (a, b): boolean => {
-  if (b.type === 'AnyTypeAnnotation') {
-    return true;
-  }
-  if (a.type === 'AnyTypeAnnotation') {
-    return false;
-  }
-  if (a.type === 'ArrayTypeAnnotation') {
-    return false;
-  }
-  if (a.type === 'TupleTypeAnnotation' && b.type === 'TupleTypeAnnotation') {
-    return a.types.every((item, ind) => isSubtype(item, b.types[ind]));
-  }
-  if (a.type === 'TupleTypeAnnotation' || b.type === 'TupleTypeAnnotation') {
-    return false;
-  }
-  if (a.type === b.type && a.value === b.value) {
-    return true;
-  }
+export const resolveTypes = (types: Array<any>) => {
+  const mappedTypes = types.map(item => new Type(item));
 
-  const primitiveLevelSuperiors = {
-    StringTypeAnnotation: ['AnyTypeAnnotation'],
-    NumberTypeAnnotation: ['AnyTypeAnnotation'],
-    BooleanTypeAnnotation: ['AnyTypeAnnotation'],
-    VoidTypeAnnotation: ['AnyTypeAnnotation'],
-  };
-
-  const literalLevelSuperiors = {
-    StringLiteralTypeAnnotation: [
-      'StringTypeAnnotation',
-      ...primitiveLevelSuperiors.StringTypeAnnotation,
-    ],
-    NumberLiteralTypeAnnotation: [
-      'NumberTypeAnnotation',
-      ...primitiveLevelSuperiors.NumberTypeAnnotation,
-    ],
-    BooleanLiteralTypeAnnotation: [
-      'BooleanTypeAnnotation',
-      ...primitiveLevelSuperiors.BooleanTypeAnnotation,
-    ],
-    NullLiteralTypeAnnotation: ['AnyTypeAnnotation'],
-  };
-
-  const allSuperiors = { ...primitiveLevelSuperiors, ...literalLevelSuperiors };
-  const superiors = allSuperiors[a.type];
-
-  if (!superiors) {
-    console.warn(`unknown type ${a.type}`);
-    return false;
-  }
-
-  return superiors.includes(b.type);
-};
-
-const typeDegree = (node: *) => {
-  const { type } = node;
-
-  const degrees = {
-    AnyTypeAnnotation: 0,
-    ArrayTypeAnnotation: 1,
-    TupleTypeAnnotation: 2,
-    StringTypeAnnotation: 2,
-    NumberTypeAnnotation: 2,
-    BooleanTypeAnnotation: 2,
-    VoidTypeAnnotation: 2,
-    StringLiteralTypeAnnotation: 3,
-    NumberLiteralTypeAnnotation: 3,
-    BooleanLiteralTypeAnnotation: 3,
-    NullLiteralTypeAnnotation: 3,
-  };
-
-  return degrees[type];
-};
-
-export const resolveTypes = (types: []) => {
-  const sortedTypes = [...types].sort((a, b) => typeDegree(b) - typeDegree(a));
-  const res = sortedTypes.filter((item, ind) => {
-    const leftTypes = sortedTypes.slice(ind + 1);
-    return !leftTypes.some(possibleSuperior => isSubtype(item, possibleSuperior));
-  });
-
-  return res;
+  return Type.resolveTypes(mappedTypes).map(item => item.node);
 };

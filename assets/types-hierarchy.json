@@ -1,0 +1,49 @@
+{
+  "data": "Any",
+  "children": [
+    {
+      "data": "Number",
+      "children": [
+        {
+          "data": "NumberLiteral",
+          "children": []
+        }
+      ]
+    },
+    {
+      "data": "String",
+      "children": [
+        {
+          "data": "StringLiteral",
+          "children": []
+        }
+      ]
+    },
+    {
+      "data": "Boolean",
+      "children": [
+        {
+          "data": "BooleanLiteral",
+          "children": []
+        }
+      ]
+    },
+    {
+      "data": "Void",
+      "children": []
+    },
+    {
+      "data": "NullLiteral",
+      "children": []
+    },
+    {
+      "data": "Array",
+      "children": [
+        {
+          "data": "Tuple",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
