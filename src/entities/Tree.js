@@ -1,6 +1,6 @@
 // @flow
 
-import type { TreeObjectType } from './types.flow';
+import type { TreeObjectType } from '../types.flow';
 
 class Tree {
   data: string;

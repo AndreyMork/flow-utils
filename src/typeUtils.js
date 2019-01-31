@@ -2,7 +2,7 @@
 
 // import type { PathType } from './types.flow';
 import * as bTypes from '@babel/types';
-import Type from './Type';
+import Type from './entities/Type';
 
 const getUnaryOperatorType = (operator) => {
   const operatorTypes = {

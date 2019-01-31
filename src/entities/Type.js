@@ -1,7 +1,7 @@
 // @flow
 
 import Tree from './Tree';
-import typesHierarchyJSON from '../assets/types-hierarchy.json';
+import typesHierarchyJSON from '../../assets/types-hierarchy.json';
 
 type AnnotationNodeType = Object;
 
@@ -14,9 +14,7 @@ const stripTailPart = (annotation: string): string => {
 
 class Type {
   typesHierarchy: Tree;
-
   type: string;
-
   node: AnnotationNodeType;
 
   static typesHierarchy = new Tree(typesHierarchyJSON);
