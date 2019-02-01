@@ -10,10 +10,10 @@ import expressionJSON from '../assets/temp.json';
 
 const expressions = ['UnaryExpression', 'UpdateExpression'];
 const complexExpressions = ['ArrayExpression'];
-const typeHasValue = (type: string): boolean => type.includes('Literal') && type !== 'NullLiteral';
+const typeHasValue = (type: string): boolean => type.includes('Literal') && type !== 'NullLiteral' && type !== 'TemplateLiteral';
 
 export default (node): Type => {
-  if (node === null) {
+  if (node === null || node === undefined) {
     return new Type('Void');
   }
 

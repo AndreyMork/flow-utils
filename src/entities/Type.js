@@ -7,11 +7,9 @@ import typesHierarchyJSON from '../../assets/types-hierarchy.json';
 class Type {
   typesHierarchy: Tree;
   type: string;
-  value: ?any;
 
-  constructor(type: string, value: ?any) {
+  constructor(type: string) {
     this.type = type;
-    this.value = value;
   }
 
   static typesHierarchy = new Tree(typesHierarchyJSON);
@@ -46,10 +44,7 @@ class Type {
 
   buildAnnotation() {
     const builderFunctions = {
-      StringLiteral: bTypes.StringLiteralTypeAnnotation,
       TemplateLiteral: bTypes.StringTypeAnnotation,
-      NumericLiteral: bTypes.NumberLiteralTypeAnnotation,
-      BooleanLiteral: bTypes.BooleanLiteralTypeAnnotation,
       NullLiteral: bTypes.NullLiteralTypeAnnotation,
       Void: bTypes.VoidTypeAnnotation,
       String: bTypes.StringTypeAnnotation,
@@ -62,34 +57,21 @@ class Type {
     if (!builderFunction) {
       return builderFunctions.Any();
     }
-    if (this.value) {
-      return builderFunction(this.value);
-    }
 
     return builderFunction();
   }
 
   isSubtype(b: Type): boolean {
-    // COMBAK
-    if (this.type === 'ArrayTypeAnnotation') {
-      return false;
-    }
-    if (this.type === 'TupleTypeAnnotation' && b.type === 'TupleTypeAnnotation') {
-      const thisSubtypes = this.node.types.map(item => new Type(item));
-      const bSubtypes = this.node.types.map(item => new Type(item));
-
-      return thisSubtypes.every((item, ind) => item.isSubtype(bSubtypes[ind]));
-    }
-    if (this.type === b.type && this.value === b.value) {
+    if (this.type === b.type) {
       return true;
     }
 
-    const temp = Type.typesHierarchy.findNode(b.type);
-    if (!temp) {
+    const possibleParent = Type.typesHierarchy.findNode(b.type);
+    if (!possibleParent) {
       return false;
     }
 
-    return temp.includes(this.type);
+    return possibleParent.includes(this.type);
   }
 }
 
