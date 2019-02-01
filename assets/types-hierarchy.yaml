@@ -19,3 +19,5 @@ children:
   children: []
 - data: TemplateLiteral
   children: []
+- data: Tuple
+  children: []
