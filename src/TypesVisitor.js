@@ -1,7 +1,7 @@
 // @flow
 
 import * as babelTypes from '@babel/types';
-import type { PathType } from './types.flow';
+import type { PathType, AstNodeType } from './types.flow';
 import Type from './entities/Type';
 import buildType from './buildType';
 // import { flat } from './utils';
@@ -10,9 +10,18 @@ import buildType from './buildType';
 
 const getReturnStatements = (path: PathType): Array<PathType> => {
   const returnStatements = [];
+
+  const statementsAmount = path.node.body.body.length;
+  const lastStatement = path.node.body.body[statementsAmount - 1];
+  // COMBAK
+  if (statementsAmount === 0 || !babelTypes.isReturnStatement(lastStatement)) {
+    const undefinedReturn = babelTypes.ReturnStatement();
+    returnStatements.push(undefinedReturn);
+  }
+
   path.traverse({
     ReturnStatement(innerPath) {
-      returnStatements.push(innerPath);
+      returnStatements.push(innerPath.node);
     },
   });
 
@@ -25,8 +34,8 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
   }
 
   const types = returnStatements.map(
-    (path: PathType): Type => {
-      const { argument } = path.node;
+    (node: AstNodeType): Type => {
+      const { argument } = node;
       return buildType(argument);
     },
   );
