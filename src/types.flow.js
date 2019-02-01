@@ -5,6 +5,6 @@ export type TreeObjectType = {|
   children: Array<TreeObjectType>,
 |};
 
-export type PathType = any;
+export type PathType = Object;
 export type AstNodeType = Object;
-export type VisitorType = any;
+export type VisitorType = Object;

@@ -14,7 +14,7 @@ extends:
   - 'plugin:flowtype/recommended'
 
 rules:
-  no-console: warn
+  no-console: off
   lines-between-class-members:
     - error
     - always

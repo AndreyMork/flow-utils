@@ -33,6 +33,7 @@
     "ajv": "^6.7.0",
     "commander": "^2.19.0",
     "flow-remove-types": "^1.2.3",
+    "js-yaml": "^3.12.1",
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {

@@ -1,0 +1,22 @@
+---
+expressions:
+  UnaryExpression:
+    "+": Number
+    "-": Number
+    "!": Boolean
+    "~": Boolean
+    typeof: String
+    void: Void
+  UpdateExpression:
+    "++": Number
+    "--": Number
+ValueType:
+  StringLiteral: StringLiteral
+  NumericLiteral: NumericLiteral
+  BooleanLiteral: BooleanLiteral
+CommonType:
+  String: String
+  TemplateLiteral: String
+  Number: Number
+  Boolean: Boolean
+  NullLiteral: NullLiteral

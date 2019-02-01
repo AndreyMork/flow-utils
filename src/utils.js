@@ -27,3 +27,5 @@ export const flat = (arr: Array<any>) => {
 
   return res;
 };
+
+export const hasKey = (obj: {}, key: string) => Object.keys(obj).includes(key);
