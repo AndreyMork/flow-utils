@@ -1,8 +1,13 @@
 // @flow
 
 import * as bTypes from '@babel/types';
+import fs from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
 import Tree from './Tree';
-import typesHierarchyJSON from '../../assets/types-hierarchy.json';
+
+const pathToTypesHierarchy = path.join(__dirname, '../../assets/types-hierarchy.yaml');
+const typesHierarchyObject = yaml.safeLoad(fs.readFileSync(pathToTypesHierarchy));
 
 class Type {
   typesHierarchy: Tree;
@@ -12,7 +17,7 @@ class Type {
     this.type = type;
   }
 
-  static typesHierarchy = new Tree(typesHierarchyJSON);
+  static typesHierarchy = new Tree(typesHierarchyObject);
 
   static resolveTypes(types: Array<Type>): Array<Type> {
     const sortedTypes = [...types].sort(Type.compare);
