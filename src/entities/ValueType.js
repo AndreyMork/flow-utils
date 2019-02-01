@@ -3,9 +3,6 @@
 import * as babelTypes from '@babel/types';
 import Type from './Type';
 
-type ValueType = string | number | boolean;
-type PossibleTypes = 'StringLiteral' | 'NumericLiteral' | 'BooleanLiteral';
-
 const builderFunctions = {
   StringLiteral: babelTypes.StringLiteralTypeAnnotation,
   NumericLiteral: babelTypes.NumberLiteralTypeAnnotation,
@@ -14,13 +11,16 @@ const builderFunctions = {
 
 const possibleTypes = Object.keys(builderFunctions);
 
-class LiteralType extends Type {
-  value: ValueType;
+type ValueArgType = string | boolean | number;
 
-  constructor(type: PossibleTypes, value: ValueType) {
-    if (!possibleTypes.includes(type)) {
+class ValueType extends Type {
+  value: ValueArgType;
+
+  constructor(type: string, value: ValueArgType): void {
+    if (!ValueType.canAccept(type)) {
       throw new Error(`Wrong type '${type}'`);
     }
+
     // if (isValueWrong(value)) {
     // // TODO: this check
     //   throw new Error(`Wrong value ${value} for type '${type}'`);
@@ -30,14 +30,15 @@ class LiteralType extends Type {
     this.value = value;
   }
 
+  static canAccept = (type: string): boolean => possibleTypes.includes(type);
+
   buildAnnotation() {
     const builderFunction = builderFunctions[this.type];
-
     return builderFunction(this.value);
   }
 
-  isSubtype(b: Type) {
-    if (b instanceof LiteralType) {
+  isSubtype(b: Type): boolean {
+    if (b instanceof ValueType) {
       return this.type === b.type && this.value === b.value;
     }
 
@@ -45,4 +46,4 @@ class LiteralType extends Type {
   }
 }
 
-export default LiteralType;
+export default ValueType;
