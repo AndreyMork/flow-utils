@@ -1,6 +1,6 @@
 // @flow
 
-import * as bTypes from '@babel/types';
+import * as babelTypes from '@babel/types';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -48,13 +48,13 @@ class Type {
 
   buildAnnotation() {
     const builderFunctions = {
-      TemplateLiteral: bTypes.StringTypeAnnotation,
-      NullLiteral: bTypes.NullLiteralTypeAnnotation,
-      Void: bTypes.VoidTypeAnnotation,
-      String: bTypes.StringTypeAnnotation,
-      Number: bTypes.NumberTypeAnnotation,
-      Boolean: bTypes.BooleanTypeAnnotation,
-      Any: bTypes.AnyTypeAnnotation,
+      TemplateLiteral: babelTypes.StringTypeAnnotation,
+      NullLiteral: babelTypes.NullLiteralTypeAnnotation,
+      Void: babelTypes.VoidTypeAnnotation,
+      String: babelTypes.StringTypeAnnotation,
+      Number: babelTypes.NumberTypeAnnotation,
+      Boolean: babelTypes.BooleanTypeAnnotation,
+      Any: babelTypes.AnyTypeAnnotation,
     };
 
     const builderFunction = builderFunctions[this.type];

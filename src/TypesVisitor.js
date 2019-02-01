@@ -1,6 +1,6 @@
 // @flow
 
-import * as bTypes from '@babel/types';
+import * as babelTypes from '@babel/types';
 import type { PathType } from './types.flow';
 import Type from './entities/Type';
 import buildType from './buildType';
@@ -21,7 +21,7 @@ const getReturnStatements = (path: PathType): Array<PathType> => {
 
 const getTypeAnnotation = (returnStatements: Array<PathType>) => {
   if (returnStatements.length === 0) {
-    return bTypes.typeAnnotation(bTypes.VoidTypeAnnotation());
+    return babelTypes.typeAnnotation(babelTypes.VoidTypeAnnotation());
   }
 
   const types = returnStatements.map(
@@ -31,20 +31,20 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
     },
   );
   if (types.length === 1) {
-    return bTypes.typeAnnotation(types[0].buildAnnotation());
+    return babelTypes.typeAnnotation(types[0].buildAnnotation());
   }
 
   const resolvedTypes = Type.resolveTypes(types);
   const annotations = resolvedTypes.map(type => type.buildAnnotation());
-  const unionTypes = bTypes.UnionTypeAnnotation(annotations);
-  return bTypes.typeAnnotation(unionTypes);
+  const unionTypes = babelTypes.UnionTypeAnnotation(annotations);
+  return babelTypes.typeAnnotation(unionTypes);
 };
 
 export default {
   'FunctionDeclaration|FunctionExpression|ArrowFunctionExpression': (path: PathType) => {
     if (!path.get('body').isBlockStatement()) {
       const { body } = path.node;
-      const returnTypeAnnotation = bTypes.typeAnnotation(buildType(body).buildAnnotation());
+      const returnTypeAnnotation = babelTypes.typeAnnotation(buildType(body).buildAnnotation());
       path.get('returnType').replaceWith(returnTypeAnnotation);
       return;
     }
