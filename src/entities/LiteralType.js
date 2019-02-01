@@ -22,6 +22,7 @@ class LiteralType extends Type {
       throw new Error(`Wrong type '${type}'`);
     }
     // if (isValueWrong(value)) {
+    // // TODO: this check
     //   throw new Error(`Wrong value ${value} for type '${type}'`);
     // }
 
