@@ -16,7 +16,6 @@ program
   .arguments('<input-path> <output-path>')
   // .option('-o, --output [path]', 'output path')
   .action((inputPath, outputPath) => {
-    console.log(inputPath, outputPath);
     const fileContent = fs.readFileSync(inputPath, 'utf-8');
     const res = app(fileContent);
     fs.writeFileSync(outputPath, res);

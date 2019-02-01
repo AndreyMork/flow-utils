@@ -35,15 +35,6 @@
     {
       "data": "NullLiteral",
       "children": []
-    },
-    {
-      "data": "Array",
-      "children": [
-        {
-          "data": "Tuple",
-          "children": []
-        }
-      ]
     }
   ]
 }
