@@ -16,7 +16,6 @@ class Type {
 
   static resolveTypes(types: Array<Type>): Array<Type> {
     const sortedTypes = [...types].sort(Type.compare);
-
     const res = sortedTypes.filter((item, ind) => {
       const leftTypes = sortedTypes.slice(ind + 1);
       return !leftTypes.some(possibleSuperior => item.isSubtype(possibleSuperior));
