@@ -47,3 +47,5 @@ CommonType:
   NullLiteral: NullLiteral
 TupleType:
   ArrayExpression: Tuple
+ObjectType:
+  ObjectExpression: Object

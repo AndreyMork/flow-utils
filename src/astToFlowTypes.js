@@ -8,7 +8,7 @@ import type { AstNodeType } from './types.flow';
 
 const pathToMap = path.join(__dirname, '../assets/ast-to-flow-types-map.yaml');
 const {
-  expressions, ValueType, CommonType, TupleType,
+  expressions, ValueType, CommonType, TupleType, ObjectType,
 } = yaml.safeLoad(
   fs.readFileSync(pathToMap, 'utf-8'),
 );
@@ -22,6 +22,7 @@ type AstToFlowTypesReturnType = {|
   type: string,
   value?: boolean | string | number,
   elements?: Array<AstNodeType>,
+  properties?: Array<{| key: AstNodeType, value: AstNodeType |}>,
 |};
 
 const astToFlowTypes = (node: AstNodeType): AstToFlowTypesReturnType => {
@@ -61,6 +62,15 @@ const astToFlowTypes = (node: AstNodeType): AstToFlowTypesReturnType => {
     const { elements } = node;
     // console.log(elements.map(astToFlowTypes));
     return { type: 'Tuple', elements };
+  }
+  if (hasKey(ObjectType, type)) {
+    const properties = node.properties.map(prop => ({
+      key: prop.key,
+      value: prop.value,
+    }));
+    // const properties = node.properties.map(prop => prop.value);
+
+    return { type: 'Object', properties };
   }
 
   console.warn(`Unknown type ${type}`);
