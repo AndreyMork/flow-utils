@@ -20,3 +20,5 @@ CommonType:
   Number: Number
   Boolean: Boolean
   NullLiteral: NullLiteral
+TupleType:
+  ArrayExpression: Tuple

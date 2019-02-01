@@ -3,13 +3,16 @@
 // import type { PathType } from './types.flow';
 import Type from './entities/Type';
 import ValueType from './entities/ValueType';
+import TupleType from './entities/TupleType';
 import astToFlowType from './astToFlowTypes';
 import type { AstNodeType } from './types.flow';
 
-export default (node: AstNodeType): Type => {
-  const { type, value } = astToFlowType(node);
+const buildType = (node: AstNodeType): Type => {
+  const typeObj = astToFlowType(node);
+  const { type } = typeObj;
 
   if (ValueType.canAccept(type)) {
+    const { value } = typeObj;
     if (value === undefined) {
       throw new Error('Value should be defined');
     }
@@ -17,5 +20,16 @@ export default (node: AstNodeType): Type => {
     return new ValueType(type, value);
   }
 
+  if (TupleType.canAccept(type)) {
+    const { elements } = typeObj;
+    if (elements === undefined) {
+      throw new Error('Elements should be defined');
+    }
+
+    return new TupleType(type, elements.map(buildType));
+  }
+
   return new Type(type);
 };
+
+export default buildType;

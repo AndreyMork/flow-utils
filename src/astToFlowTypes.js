@@ -7,14 +7,24 @@ import { hasKey } from './utils';
 import type { AstNodeType } from './types.flow';
 
 const pathToMap = path.join(__dirname, '../assets/ast-to-flow-types-map.yaml');
-const { expressions, ValueType, CommonType } = yaml.safeLoad(fs.readFileSync(pathToMap, 'utf-8'));
+const {
+  expressions, ValueType, CommonType, TupleType,
+} = yaml.safeLoad(
+  fs.readFileSync(pathToMap, 'utf-8'),
+);
 
-export default (
-  node: AstNodeType,
-): {|
+// type AstToFlowTypesReturnType =
+//   | {| type: string |}
+//   | {| type: string, value: boolean | string | number |}
+//   | {| type: string, elements: Array<AstNodeType> |};
+
+type AstToFlowTypesReturnType = {|
   type: string,
-  value?: boolean | number | string,
-|} => {
+  value?: boolean | string | number,
+  elements?: Array<AstNodeType>,
+|};
+
+const astToFlowTypes = (node: AstNodeType): AstToFlowTypesReturnType => {
   if (node === undefined) {
     throw new Error('Node is undefined');
   }
@@ -47,7 +57,14 @@ export default (
   if (hasKey(CommonType, type)) {
     return { type: CommonType[type] };
   }
+  if (hasKey(TupleType, type)) {
+    const { elements } = node;
+    // console.log(elements.map(astToFlowTypes));
+    return { type: 'Tuple', elements };
+  }
 
   console.warn(`Unknown type ${type}`);
   return { type: 'Any' };
 };
+
+export default astToFlowTypes;
