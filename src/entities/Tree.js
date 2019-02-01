@@ -1,6 +1,6 @@
 // @flow
 
-import type { TreeObjectType } from './types.flow';
+import type { TreeObjectType } from '../types.flow';
 
 class Tree {
   data: string;
@@ -17,16 +17,13 @@ class Tree {
       return root;
     }
 
-    // const res = root.children.reduce((acc: ?Tree, child: Tree): ?Tree => {
-    //   if (acc !== undefined) {
-    //     return acc;
-    //   }
-    //
-    //   return child.findNode(value);
-    // }, undefined);
+    const res = root.children.reduce((acc: ?Tree, child: Tree): ?Tree => {
+      if (acc !== undefined) {
+        return acc;
+      }
 
-    const nodeIsFound = (node: Tree): boolean => Tree.dfs(node, value) !== undefined;
-    const res = root.getChildren().find(nodeIsFound);
+      return child.findNode(value);
+    }, undefined);
 
     return res;
   }

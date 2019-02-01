@@ -1,23 +1,16 @@
 // @flow
 
+import * as bTypes from '@babel/types';
 import Tree from './Tree';
-import typesHierarchyJSON from '../assets/types-hierarchy.json';
-
-type AnnotationNodeType = Object;
-
-const stripTailPart = (annotation: string): string => {
-  const tailPart = 'TypeAnnotation';
-
-  const [res] = annotation.split(tailPart);
-  return res;
-};
+import typesHierarchyJSON from '../../assets/types-hierarchy.json';
 
 class Type {
   typesHierarchy: Tree;
-
   type: string;
 
-  node: AnnotationNodeType;
+  constructor(type: string) {
+    this.type = type;
+  }
 
   static typesHierarchy = new Tree(typesHierarchyJSON);
 
@@ -49,32 +42,36 @@ class Type {
     return bLevel - aLevel;
   }
 
-  constructor(annotationNode: AnnotationNodeType) {
-    this.type = stripTailPart(annotationNode.type);
-    this.node = annotationNode;
+  buildAnnotation() {
+    const builderFunctions = {
+      TemplateLiteral: bTypes.StringTypeAnnotation,
+      NullLiteral: bTypes.NullLiteralTypeAnnotation,
+      Void: bTypes.VoidTypeAnnotation,
+      String: bTypes.StringTypeAnnotation,
+      Number: bTypes.NumberTypeAnnotation,
+      Boolean: bTypes.BooleanTypeAnnotation,
+      Any: bTypes.AnyTypeAnnotation,
+    };
+
+    const builderFunction = builderFunctions[this.type];
+    if (!builderFunction) {
+      return builderFunctions.Any();
+    }
+
+    return builderFunction();
   }
 
   isSubtype(b: Type): boolean {
-    // COMBAK
-    if (this.type === 'ArrayTypeAnnotation') {
-      return false;
-    }
-    if (this.type === 'TupleTypeAnnotation' && b.type === 'TupleTypeAnnotation') {
-      const thisSubtypes = this.node.types.map(item => new Type(item));
-      const bSubtypes = this.node.types.map(item => new Type(item));
-
-      return thisSubtypes.every((item, ind) => item.isSubtype(bSubtypes[ind]));
-    }
-    if (this.type === b.type && this.node.value === b.node.value) {
+    if (this.type === b.type) {
       return true;
     }
 
-    const temp = Type.typesHierarchy.findNode(b.type);
-    if (!temp) {
+    const possibleParent = Type.typesHierarchy.findNode(b.type);
+    if (!possibleParent) {
       return false;
     }
 
-    return temp.includes(this.type);
+    return possibleParent.includes(this.type);
   }
 }
 

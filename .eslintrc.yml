@@ -14,4 +14,8 @@ extends:
   - 'plugin:flowtype/recommended'
 
 rules:
-  no-console: 0
+  no-console: warn
+  lines-between-class-members:
+    - error
+    - always
+    - exceptAfterSingleLine: true

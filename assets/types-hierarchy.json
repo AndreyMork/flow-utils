@@ -5,7 +5,7 @@
       "data": "Number",
       "children": [
         {
-          "data": "NumberLiteral",
+          "data": "NumericLiteral",
           "children": []
         }
       ]
@@ -37,13 +37,8 @@
       "children": []
     },
     {
-      "data": "Array",
-      "children": [
-        {
-          "data": "Tuple",
-          "children": []
-        }
-      ]
+      "data": "TemplateLiteral",
+      "children": []
     }
   ]
 }

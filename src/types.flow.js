@@ -6,4 +6,5 @@ export type TreeObjectType = {|
 |};
 
 export type PathType = any;
+export type AstNodeType = Object;
 export type VisitorType = any;
