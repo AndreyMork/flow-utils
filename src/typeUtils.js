@@ -3,6 +3,7 @@
 // import type { PathType } from './types.flow';
 import * as bTypes from '@babel/types';
 import Type from './entities/Type';
+import LiteralType from './entities/LiteralType';
 import type { PathType } from './types.flow';
 import expressionJSON from '../assets/temp.json';
 
@@ -22,13 +23,9 @@ export default (node): Type => {
     const { operator } = node;
     return new Type(expressionJSON[operator]);
   }
-  if (complexExpressions.includes(type)) {
-    console.log(type);
-    return new Type('Void');
-  }
   if (typeHasValue(type)) {
     const { value } = node;
-    return new Type(type, value);
+    return new LiteralType(type, value);
   }
 
   return new Type(type);

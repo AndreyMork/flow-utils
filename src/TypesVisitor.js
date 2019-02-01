@@ -36,12 +36,7 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
 };
 
 export default {
-  'FunctionDeclaration|FunctionExpression': (path: PathType) => {
-    const returnStatements = getReturnStatements(path);
-    const typeAnnotation = getTypeAnnotation(returnStatements);
-    path.get('returnType').replaceWith(typeAnnotation);
-  },
-  ArrowFunctionExpression(path: PathType) {
+  'FunctionDeclaration|FunctionExpression|ArrowFunctionExpression': (path: PathType) => {
     if (!path.get('body').isBlockStatement()) {
       const { body } = path.node;
       const returnTypeAnnotation = bTypes.typeAnnotation(

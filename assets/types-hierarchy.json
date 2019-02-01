@@ -35,6 +35,10 @@
     {
       "data": "NullLiteral",
       "children": []
+    },
+    {
+      "data": "TemplateLiteral",
+      "children": []
     }
   ]
 }
