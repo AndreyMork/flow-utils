@@ -4,12 +4,37 @@ expressions:
     "+": Number
     "-": Number
     "!": Boolean
-    "~": Boolean
+    "~": Number
     typeof: String
     void: Void
   UpdateExpression:
     "++": Number
     "--": Number
+  BinaryExpression:
+    "==": Boolean
+    "!=": Boolean
+    "===": Boolean
+    "!==": Boolean
+    "<": Boolean
+    "<=": Boolean
+    ">": Boolean
+    ">=": Boolean
+    "<<": Number
+    ">>": Number
+    ">>>": Number
+    # "+":
+    "-": Number
+    "*": Number
+    "/": Number
+    "%": Number
+    "**": Number
+    "|": Number
+    "^": Number
+    "&": Number
+    instanceof: Boolean
+  LogicalExpression:
+    "||": Boolean
+    "&&": Boolean
 ValueType:
   StringLiteral: StringLiteral
   NumericLiteral: NumericLiteral
