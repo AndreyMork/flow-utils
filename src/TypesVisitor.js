@@ -3,7 +3,7 @@
 import * as bTypes from '@babel/types';
 import type { PathType } from './types.flow';
 import Type from './entities/Type';
-import returnStatementToType from './typeUtils';
+import buildType from './buildType';
 // import { flat } from './utils';
 
 // const traverse = require('@babel/traverse').default;
@@ -24,7 +24,12 @@ const getTypeAnnotation = (returnStatements: Array<PathType>) => {
     return bTypes.typeAnnotation(bTypes.VoidTypeAnnotation());
   }
 
-  const types = returnStatements.map(({ argument }) => returnStatementToType(argument));
+  const types = returnStatements.map(
+    (path: PathType): Type => {
+      const { argument } = path.node;
+      return buildType(argument);
+    },
+  );
   if (types.length === 1) {
     return bTypes.typeAnnotation(types[0].buildAnnotation());
   }
@@ -39,9 +44,7 @@ export default {
   'FunctionDeclaration|FunctionExpression|ArrowFunctionExpression': (path: PathType) => {
     if (!path.get('body').isBlockStatement()) {
       const { body } = path.node;
-      const returnTypeAnnotation = bTypes.typeAnnotation(
-        returnStatementToType(body).buildAnnotation(),
-      );
+      const returnTypeAnnotation = bTypes.typeAnnotation(buildType(body).buildAnnotation());
       path.get('returnType').replaceWith(returnTypeAnnotation);
       return;
     }
