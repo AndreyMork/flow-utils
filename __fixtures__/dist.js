@@ -15,7 +15,7 @@ const f = (): 'fff' => {
   return 'fff';
 };
 
-const g = function(): 1 | [1, 2, 3, 'a', [1, true, null]] | 'ggg' {
+const g = function(): [1, 2, 3, 'a', [1, true, null]] | 'ggg' | 1 {
   if (Math.random() > 0.5) {
     return 1;
   } else if (true) {
@@ -51,4 +51,4 @@ function emptyReturn(): void {
   return;
 }
 
-const objF = (a): any => ({ a });
+const objF = (a): {| a: any |} => ({ a });
