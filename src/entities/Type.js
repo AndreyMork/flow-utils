@@ -20,17 +20,21 @@ class Type {
   static typesHierarchy = new Tree(typesHierarchyObject);
 
   static resolveTypes(types: Array<Type>): Array<Type> {
-    const sortedTypes = [...types].sort(Type.compare);
-    const firstFiltered = sortedTypes.filter((item, ind) => {
-      const leftTypes = sortedTypes.slice(ind + 1);
-      return !leftTypes.some(possibleSuperior => item.isSubtype(possibleSuperior));
-    });
+    const res = types.reduce((acc: Array<Type>, type: Type): Array<Type> => {
+      const typeIsAbundant = acc.some(
+        (possibleSuperior: Type): boolean => type.isSubtype(possibleSuperior),
+      );
 
-    const reversed = firstFiltered.reverse();
-    const res = reversed.filter((item, ind) => {
-      const leftTypes = reversed.slice(ind + 1);
-      return !leftTypes.some(possibleSuperior => item.isSubtype(possibleSuperior));
-    });
+      if (typeIsAbundant) {
+        return acc;
+      }
+
+      const filteredAcc = acc.filter(
+        (possibleSubtype: Type): boolean => !possibleSubtype.isSubtype(type),
+      );
+
+      return [...filteredAcc, type];
+    }, []);
 
     return res;
   }
