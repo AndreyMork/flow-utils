@@ -2,7 +2,7 @@
 
 import * as babelTypes from '@babel/types';
 import type { PathType, AstNodeType } from './types.flow';
-import Type from './entities/Type';
+// import Type from './Type/Type';
 import buildType from './buildType';
 // import { flat } from './utils';
 
