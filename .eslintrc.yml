@@ -14,8 +14,18 @@ extends:
   - 'plugin:flowtype/recommended'
 
 rules:
-  no-console: off
+  no-console: warn
   lines-between-class-members:
     - error
     - always
     - exceptAfterSingleLine: true
+  flowtype/no-primitive-constructor-types: error
+  flowtype/require-return-type:
+    - warn
+    - always
+    - excludeArrowFunctions: expressionsOnly
+  # flowtype/no-mutable-array: warn
+  flowtype/no-weak-types: warn
+  flowtype/type-id-match:
+    - warn
+    - ^([A-Z][a-z0-9]*)+Type$

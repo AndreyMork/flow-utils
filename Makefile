@@ -16,7 +16,7 @@ run: build
 build:
 	rm -rf dist/
 	# npx flow-remove-types --all --pretty src --out-dir dist
-	npx babel src --out-dir dist --source-maps inline
+	npx babel src --out-dir dist --source-maps inline --copy-files
 .PHONY: build
 
 test:
