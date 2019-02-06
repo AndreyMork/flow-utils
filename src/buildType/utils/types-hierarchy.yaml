@@ -1,0 +1,25 @@
+---
+data: Any
+children:
+- data: Number
+  children:
+  - data: NumericLiteral
+    children: []
+- data: String
+  children:
+  - data: StringLiteral
+    children: []
+- data: Boolean
+  children:
+  - data: BooleanLiteral
+    children: []
+- data: Void
+  children: []
+- data: NullLiteral
+  children: []
+- data: TemplateLiteral
+  children: []
+- data: Tuple
+  children: []
+- data: Object
+  children: []
