@@ -1,13 +1,16 @@
 // @flow
 
-import type { TreeObjectType } from '../types.flow';
+type TreeObjectType = {|
+  data: string,
+  children: Array<TreeObjectType>,
+|};
 
 class Tree {
   data: string;
 
   children: Array<Tree>;
 
-  constructor(objTree: TreeObjectType): void {
+  constructor(objTree: TreeObjectType) {
     this.data = objTree.data;
     this.children = objTree.children.map(child => new Tree(child));
   }
