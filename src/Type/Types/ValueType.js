@@ -2,7 +2,7 @@
 
 import BaseType from './BaseType';
 import getAnnotationBuilder from '../getAnnotationBuilder';
-import type { BabelTypesTypeAnnotationType } from '../types.flow';
+import type { BabelTypesTypeAnnotationType } from '../../flow-types/Type.flow';
 
 type ValueArgType = string | boolean | number;
 class ValueType extends BaseType {

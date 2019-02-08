@@ -4,7 +4,7 @@ import typesHierarchy from '../utils/typesHierarchy';
 import getAnnotationBuilder from '../getAnnotationBuilder';
 
 import typeof Tree from '../utils/Tree';
-import type { BabelTypesTypeAnnotationType } from '../types.flow';
+import type { BabelTypesTypeAnnotationType } from '../../flow-types/Type.flow';
 
 class BaseType {
   +type: string;

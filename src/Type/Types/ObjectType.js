@@ -3,7 +3,7 @@
 import babelTypes from '@babel/types';
 import BaseType from './BaseType';
 import getAnnotationBuilder from '../getAnnotationBuilder';
-import type { BabelTypesTypeAnnotationType } from '../types.flow';
+import type { BabelTypesTypeAnnotationType } from '../../flow-types/Type.flow';
 
 type PropertiesType = $ReadOnlyArray<{| key: string, value: BaseType |}>;
 class ObjectType extends BaseType {

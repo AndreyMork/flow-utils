@@ -1,7 +1,7 @@
 // @flow
 
 import * as babelTypes from '@babel/types';
-import type { BabelTypesTypeAnnotationType } from './types.flow';
+import type { BabelTypesTypeAnnotationType } from '../flow-types/Type.flow';
 
 type BuilderFunctionType = mixed => BabelTypesTypeAnnotationType;
 type BuilderFunctionsType = $ReadOnly<{

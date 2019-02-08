@@ -4,7 +4,7 @@ import BaseType from './Types/BaseType';
 import ValueType from './Types/ValueType';
 import TupleType from './Types/TupleType';
 import { knownTypes } from './getAnnotationBuilder';
-import type { TypesType, BabelTypesTypeAnnotationType } from './types.flow';
+import type { TypesType, BabelTypesTypeAnnotationType } from '../flow-types/Type.flow';
 
 const buildType = (typeObject: TypesType): BaseType => {
   const { type } = typeObject;
