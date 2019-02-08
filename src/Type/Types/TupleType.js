@@ -1,11 +1,11 @@
 // @flow
 
-import Type from './Type';
+import BaseType from './BaseType';
 import getAnnotationBuilder from '../getAnnotationBuilder';
 import type { BabelTypesTypeAnnotationType } from '../types.flow';
 
-type ElementsType = Array<Type>;
-class TupleType extends Type {
+type ElementsType = Array<BaseType>;
+class TupleType extends BaseType {
   +elements: ElementsType;
 
   constructor(type: string, elements: ElementsType) {
@@ -13,7 +13,7 @@ class TupleType extends Type {
     this.elements = elements;
   }
 
-  isSubtype(b: Type): boolean {
+  isSubtype(b: BaseType): boolean {
     if (!(b instanceof TupleType)) {
       return super.isSubtype(b);
     }

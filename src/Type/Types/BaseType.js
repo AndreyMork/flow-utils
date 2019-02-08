@@ -6,7 +6,7 @@ import getAnnotationBuilder from '../getAnnotationBuilder';
 import typeof Tree from '../utils/Tree';
 import type { BabelTypesTypeAnnotationType } from '../types.flow';
 
-class Type {
+class BaseType {
   +type: string;
   constructor(type: string) {
     this.type = type;
@@ -14,25 +14,7 @@ class Type {
 
   static typesHierarchy: Tree = typesHierarchy;
 
-  static resolveTypes(types: $ReadOnlyArray<Type>): Array<Type> {
-    return types.reduce((acc: Array<Type>, type: Type): Array<Type> => {
-      const typeIsAbundant = acc.some(
-        (possibleSuperior: Type): boolean => type.isSubtype(possibleSuperior),
-      );
-
-      if (typeIsAbundant) {
-        return acc;
-      }
-
-      const filteredAcc = acc.filter(
-        (possibleSubtype: Type): boolean => !possibleSubtype.isSubtype(type),
-      );
-
-      return [...filteredAcc, type];
-    }, []);
-  }
-
-  isSubtype(b: Type): boolean {
+  isSubtype(b: BaseType): boolean {
     const possibleParent = typesHierarchy.findNode(b.type);
     if (possibleParent == null) {
       return false;
@@ -47,4 +29,4 @@ class Type {
   }
 }
 
-export default Type;
+export default BaseType;

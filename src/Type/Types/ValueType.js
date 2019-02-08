@@ -1,11 +1,11 @@
 // @flow
 
-import Type from './Type';
+import BaseType from './BaseType';
 import getAnnotationBuilder from '../getAnnotationBuilder';
 import type { BabelTypesTypeAnnotationType } from '../types.flow';
 
 type ValueArgType = string | boolean | number;
-class ValueType extends Type {
+class ValueType extends BaseType {
   +value: ValueArgType;
 
   constructor(type: string, value: ValueArgType) {
@@ -13,7 +13,7 @@ class ValueType extends Type {
     this.value = value;
   }
 
-  isSubtype(b: Type): boolean {
+  isSubtype(b: BaseType): boolean {
     if (!(b instanceof ValueType)) {
       return super.isSubtype(b);
     }

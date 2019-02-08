@@ -1,12 +1,12 @@
 // @flow
 
 import babelTypes from '@babel/types';
-import Type from './Type';
+import BaseType from './BaseType';
 import getAnnotationBuilder from '../getAnnotationBuilder';
 import type { BabelTypesTypeAnnotationType } from '../types.flow';
 
-type PropertiesType = $ReadOnlyArray<{| key: string, value: Type |}>;
-class ObjectType extends Type {
+type PropertiesType = $ReadOnlyArray<{| key: string, value: BaseType |}>;
+class ObjectType extends BaseType {
   properties: PropertiesType;
 
   constructor(type: string, properties: PropertiesType) {
@@ -17,6 +17,7 @@ class ObjectType extends Type {
   buildAnnotation(): BabelTypesTypeAnnotationType {
     const buildAnnotation = getAnnotationBuilder(this.type);
 
+    // TODO: separate this function
     const properties = this.properties.map(
       (prop): * => {
         const key = babelTypes.StringLiteral(prop.key);
@@ -29,7 +30,7 @@ class ObjectType extends Type {
     return buildAnnotation(properties);
   }
 
-  isSubtype(b: Type): boolean {
+  isSubtype(b: BaseType): boolean {
     if (!(b instanceof ObjectType)) {
       return super.isSubtype(b);
     }

@@ -10,6 +10,6 @@ const pathToTypesHierarchy = path.join(__dirname, './types-hierarchy.yaml');
 const typesHierarchyObject = yaml.safeLoad(fs.readFileSync(pathToTypesHierarchy, 'utf-8'));
 // NOTE: consider validation
 
-const typesHierarchy = new Tree(typesHierarchyObject);
+const typesHierarchy = new Tree((typesHierarchyObject: any));
 
 export default typesHierarchy;
