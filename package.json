@@ -1,10 +1,10 @@
 {
-  "name": "!!!name",
+  "name": "flow-utils",
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
   "bin": {
-    "!!!name": "dist/bin/!!!name.js"
+    "flow-utils": "dist/bin/flowUtils.js"
   },
   "files": [
     "dist"
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "!!!url.git"
+    "url": "https://github.com/AndreyMork/flow-utils.git"
   },
   "bugs": {
-    "url": "!!!url"
+    "url": "https://github.com/AndreyMork/flow-utils"
   },
-  "homepage": "!!!url#readme",
+  "homepage": "https://github.com/AndreyMork/flow-utils#readme",
   "author": "",
   "license": "ISC",
   "dependencies": {
