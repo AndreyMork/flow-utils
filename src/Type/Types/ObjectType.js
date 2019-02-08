@@ -7,7 +7,7 @@ import type { BabelTypesTypeAnnotationType } from '../types.flow';
 
 type PropertiesType = $ReadOnlyArray<{| key: string, value: BaseType |}>;
 class ObjectType extends BaseType {
-  properties: PropertiesType;
+  +properties: PropertiesType;
 
   constructor(type: string, properties: PropertiesType) {
     super(type);
