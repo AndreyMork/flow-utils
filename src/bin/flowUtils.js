@@ -5,6 +5,7 @@
 // const app = require('..').default;
 // const { version } = require('../../package.json');
 
+import 'source-map-support/register';
 import program from 'commander';
 import fs from 'fs';
 import app from '..';

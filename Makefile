@@ -9,7 +9,7 @@ ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(ARGS):;@:)
 
 run: build
-	node -r source-map-support/register dist/bin/flowUtils.js temp/source.js temp/dist.js
+	node dist/bin/flowUtils.js temp/source.js temp/dist.js
 	# npx prettier-eslint --write temp/*
 .PHONY: run
 
