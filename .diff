@@ -1,0 +1,136 @@
+diff --git a/assets/ast-to-flow-types-map.yaml b/src/astToFlowTypes/ast-to-flow-types-map.yaml
+similarity index 97%
+rename from assets/ast-to-flow-types-map.yaml
+rename to src/astToFlowTypes/ast-to-flow-types-map.yaml
+index 7ad648c..02b387a 100644
+--- a/assets/ast-to-flow-types-map.yaml
++++ b/src/astToFlowTypes/ast-to-flow-types-map.yaml
+@@ -22,6 +22,7 @@ expressions:
+     "<<": Number
+     ">>": Number
+     ">>>": Number
++    # TODO: binary "+"
+     # "+":
+     "-": Number
+     "*": Number
+diff --git a/src/astToFlowTypes/astToFlowMap.js b/src/astToFlowTypes/astToFlowMap.js
+new file mode 100644
+index 0000000..314bdad
+--- /dev/null
++++ b/src/astToFlowTypes/astToFlowMap.js
+@@ -0,0 +1,11 @@
++// @flow
++
++import fs from 'fs';
++import path from 'path';
++import yaml from 'js-yaml';
++
++const pathToMap = path.join(__dirname, './ast-to-flow-types-map.yaml');
++
++const astToFlowMap = yaml.safeLoad(fs.readFileSync(pathToMap, 'utf-8'));
++
++export default (astToFlowMap: any);
+diff --git a/src/astToFlowTypes/index.js b/src/astToFlowTypes/index.js
+new file mode 100644
+index 0000000..f05f146
+--- /dev/null
++++ b/src/astToFlowTypes/index.js
+@@ -0,0 +1,59 @@
++// @flow
++
++import astToFlowMap from './astToFlowMap';
++import { hasKey } from '../utils';
++
++import type { AstNodeType } from '../flow-types';
++import type { TypesType } from '../flow-types/Type.flow';
++
++console.log(Object.keys(astToFlowMap));
++const astToFlowTypes = (node: AstNodeType | null): TypesType => {
++  if (node === null) {
++    return { type: 'Void' };
++  }
++
++  const { type } = node;
++  console.log(type);
++  // if (hasKey(expressions, type)) {
++  //   const operatorToType = expressions[type];
++  //   const { operator } = node;
++  //
++  //   if (operator === null || operator === undefined) {
++  //     throw new Error('operator is required');
++  //   }
++  //
++  //   if (!hasKey(operatorToType, operator)) {
++  //     throw new Error(`Unknown operator ${operator}`);
++  //   }
++  //
++  //   return { type: operatorToType[operator] };
++  // }
++  //
++  // if (hasKey(ValueType, type)) {
++  //   const { value } = node;
++  //   return { value, type: ValueType[type] };
++  // }
++  //
++  // if (hasKey(CommonType, type)) {
++  //   return { type: CommonType[type] };
++  // }
++  // if (hasKey(TupleType, type)) {
++  //   const { elements } = node;
++  //   // console.log(elements.map(astToFlowTypes));
++  //   return { type: 'Tuple', elements };
++  // }
++  // if (hasKey(ObjectType, type)) {
++  //   const properties = node.properties.map(prop => ({
++  //     key: prop.key,
++  //     value: prop.value,
++  //   }));
++  //   // const properties = node.properties.map(prop => prop.value);
++  //
++  //   return { type: 'Object', properties };
++  // }
++  //
++  // console.warn(`Unknown type ${type}`);
++  // return { type: 'Any' };
++};
++
++export default astToFlowTypes;
+diff --git a/src/flow-types/index.js b/src/flow-types/index.js
+index 9db596c..edb0f2c 100644
+--- a/src/flow-types/index.js
++++ b/src/flow-types/index.js
+@@ -1,5 +1,5 @@
+ // @flow
+ 
+ export type PathType = {};
+-export type AstNodeType = {};
++export type AstNodeType = { type: string };
+ export type VisitorType = {};
+diff --git a/src/index.js b/src/index.js
+index 714b4bd..6d9c40d 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -1,9 +1,20 @@
++// @flow
++
+ import generate from '@babel/generator';
+ import astWalker from './astWalker';
+-import TypesVisitor from './TypesVisitor';
++// import TypesVisitor from './TypesVisitor';
++import astToFlowTypes from './astToFlowTypes';
++
++export default (sourceCode: string): string => {
++  // const ast = astWalker(sourceCode, TypesVisitor);
++  const myVisitor = {
++    Expression(path) {
++      astToFlowTypes(path.node);
++    },
++  };
++
++  const ast = astWalker(sourceCode, myVisitor);
+ 
+-export default (sourceCode) => {
+-  const ast = astWalker(sourceCode, TypesVisitor);
+   const distCode = generate(ast, { retainLines: true }).code;
+ 
+   return distCode;
